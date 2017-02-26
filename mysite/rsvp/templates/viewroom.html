@@ -9,7 +9,7 @@
         <div class="col-md-10 col-md-offset-1">  
             <div class="col-md-2">  
                 <div class="list-group">  
-                    <a href="/viewroom/" class="list-group-item" id="id_typ_all">全部会议室</a>  
+                    <a href="/viewroom/" class="list-group-item" id="id_typ_all">My Events</a>  
                     {% for acad in acad_list %}     <!--循环学院列表-->  
                     <a href="/viewroom?acad={{ acad }}" class="list-group-item" id="id_typ_{{ acad }}">{{ acad }} </a>  
                     {% endfor %}  
@@ -50,8 +50,7 @@
                     </thead>  
                     <tbody>  
                         {% for room in room_list %}  
-                        <tr>  
-                      
+                        <tr>                       
                             <td>{{ room.num }}</td>  
                             <td>{{ room.name }}</td>  
                             <td>{{ room.size }}</td>  
@@ -67,13 +66,13 @@
                         {% if room_list.has_previous %}  
                             <li class="previous"><a href="?typ={{room_acad}}&page={{ room_list.previous_page_number }}">上一页</a></li>  
                         {% else %}  
-                            <li class="previous disabled"><a href="#">上一页</a></li>  
+                            <li class="previous disabled"><a href="#">prev</a></li>  
                         {% endif %}  
                         第 {{ room_list.number }} / {{ room_list.paginator.num_pages }}页  
                         {% if room_list.has_next %}  
                             <li class="next"><a href="?acad={{room_acad}}&page={{ room_list.next_page_number }}">下一页</a></li>  
                         {% else %}  
-                            <li class="next disabled"><a href="#">下一页</a></li>  
+                            <li class="next disabled"><a href="#">next</a></li>  
                         {% endif %}  
                     </ul>  
                 </nav>  

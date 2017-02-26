@@ -8,10 +8,13 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User 
 from django.contrib import auth  
 from models import *  
+from django.contrib.auth.decorators import login_required
+from datetime import datetime 
+
  
 def index(req):   
     username=req.session.get('username', '')  
-    content = {'active_menu': 'homepage', 'user': username}  
+    content = {'user': username}  
     return render_to_response('index.html', content)
  
 def regist(req):  
@@ -30,11 +33,11 @@ def regist(req):
             else:  
                 newuser=User.objects.create_user(username=username,password=password)  
                 newuser.save()                               
-                new_myuser = MyUser(user=newuser,phone=req.POST.get("phone"))      
+                new_myuser = MyUser(user=newuser,email=req.POST.get("email"),name = username)      
                 new_myuser.save()  
                 status = "success"  
                 return HttpResponseRedirect("/login/")  
-    return render(req,"regist.html",{"active_menu":"hompage","status":status,"user":""})  
+    return render(req,"regist.html",{"status":status,"user":""})  
   
 def login(req):  
     if req.session.get('username', ''):  
@@ -56,6 +59,66 @@ def logout(req):
     auth.logout(req)  
     return HttpResponseRedirect('/')  
 
+@login_required
+def events(req):
+    username = req.session.get('username','')
+    if username != '':
+        user = MyUser.objects.get(user__username=username)
+    else:
+        user = ''
+
+    try:
+        owner_events = Event.objects.filter(owners__user__name = username)
+        vendor_events = Event.objects.filter(vendors__user__name = username)
+        guest_events = Event.objects.filter(guests__user__name = username)
+        us_sta = "no"  
+        return render(req,"events.html",{"owner_events":owner_events,"vendor_events":vendor_events,"guest_events":guest_events,"us_sta":us_sta,"user":user})  
+                  
+    except:  
+        us_sta = "yes"        
+        return render(req,"events.html",{"us_sta":us_sta,"user":user})
+
+@login_required
+def ownerdetails(req):
+    username = req.session.get('username','')  
+    if username != '':  
+        user = MyUser.objects.get(user__username=username)  
+    else:  
+        user = ''  
+    Id = req.GET.get("id","") 
+    req.session["id"]=Id    
+    try:  
+        event = Event.objects.get(pk=Id) 
+    except:               
+        return HttpResponseRedirect('/events/')    
+    content = {"event":event,"user":user}  
+    return render(req,'ownerdetails.html',content)
+
+
+@login_required
+def create(req):
+    username = req.session.get('username','')  
+    if username != '':  
+        user = MyUser.objects.get(user__username=username)  
+    else:  
+        user = ''                     
+    if req.POST:
+
+        try:
+            o = Owner.objects.get(user=user) 
+        except:
+            o = Owner(user=user)
+            o.save()
+        name = req.POST.get("name","")
+        date = req.POST.get("date","") 
+        event = Event(name=name,date=date)
+        event.save()
+        event.owners.add(o)
+        return  HttpResponseRedirect("/events/")
+    
+    return render(req,"create.html",{})
+
+"""
 def get_acad_list():  
     room_list = ConfeRoom.objects.all() 
     acad_list = set()  
@@ -76,7 +139,7 @@ def viewroom(req):
         room_list=ConfeRoom.objects.all()  
     else:  
         room_list=ConfeRoom.objects.filter(acad=room_acad)  
-    content = {"active_menu":'viewroom',"acad_list":acad_list,"room_acad":room_acad,"room_list":room_list,"user":user}  
+    content = {"acad_list":acad_list,"room_acad":room_acad,"room_list":room_list,"user":user}  
     return render(req,'viewroom.html',content)  
  
 def detail(req):  
@@ -100,7 +163,7 @@ def detail(req):
         or_sta="yes"  
     else:  
         or_sta="no"  
-    content = {"active_menu":"viewroom","room":room,"img_list":img_list,"ro":ro,"or_sta":or_sta,"user":user}  
+    content = {"room":room,"img_list":img_list,"ro":ro,"or_sta":or_sta,"user":user}  
     return render(req,'detail.html',content)  
 
  
@@ -149,3 +212,4 @@ def cancel(req):
     room =Order.objects.get(pk=Id)  
     room.delete()  
     return render(req,"index.html") 
+"""

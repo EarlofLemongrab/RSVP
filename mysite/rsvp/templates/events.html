@@ -1,0 +1,78 @@
+{% extends "base.html" %}  
+{% load staticfiles %}  
+{% block title %}Event List{% endblock %}  
+  
+{% block content %}  
+  
+<div class="container">  
+    <div class="row">  
+        <div class="col-md-10 col-md-offset-1">  
+            <div class="col-md-9 col-md-offset-1">  
+                {% if us_sta == "no" %}  
+                <table class="table table-hover">  
+                    <thead>  
+                        <tr>  
+                            <th>Owner Events</th>  
+                            <th>Event Date</th>
+                            <th><a href="/create">New Event</th>
+                        </tr>
+                    </thead>  
+
+                    <tbody>  
+                        {% for event in owner_events %}  
+                        <tr>  
+                            <td><a href="/ownerdetails/?id={{event.id}}">  {{ event.name }}  </a></td>   
+                             <td>  {{ event.date }} </td>
+                             <td></td>
+                        </tr>  
+                        {% endfor %}  
+                    </tbody>  
+                </table>  
+
+                <table class="table table-hover">  
+                    <thead>  
+                        <tr>  
+                            <th>Vendor Events</th>  
+                            <th>Event Date</th>
+                         </tr>  
+                    </thead>  
+                    <tbody>  
+                        {% for event in vendor_events %}  
+                        <tr>  
+                            <td><a href="/vendordetails/?id={{event.id}}">  {{ event.name }}  </td>   
+                            <td>  {{ event.date }}  </td>
+                        </tr>  
+                        {% endfor %}  
+                    </tbody>  
+                </table>  
+
+
+                <table class="table table-hover">  
+                    <thead>  
+                        <tr>  
+                            <th>Guest Events</th>  
+                            <th>Event Date</th>
+                        </tr>  
+                    </thead>  
+                    <tbody>  
+                        {% for event in guest_events %}  
+                        <tr>  
+                            <td><a href="/guestdetails/?id={{event.id}}">  {{ event.name }}  </td> 
+                             <td>  {{ event.date }} </td>   
+                        </tr>  
+                        {% endfor %}  
+                    </tbody>  
+                </table>  
+
+
+                {% else %}  
+                <h2>There is no event right now!</h2>  
+                {% endif %}  
+                  
+            </div>  
+        </div>  
+    </div>  
+</div>  
+  
+  
+{% endblock %}  

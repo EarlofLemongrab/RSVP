@@ -4,6 +4,7 @@ from django.contrib import admin
 from models import *  
   
 admin.site.register(MyUser)  
-admin.site.register(ConfeRoom)  
-admin.site.register(Order)  
-admin.site.register(Detail) 
+admin.site.register(Event)
+admin.site.register(Owner)
+admin.site.register(Vendor)
+admin.site.register(Guest)
