@@ -16,7 +16,7 @@ ToDo:
  * Display visible questions and responses;
  * Allow vendor to set whether question is finalized(similar to ownerdetail.html);
  
-**4. Implement GuestDetailView;**
+4. **Implement GuestDetailView;**
  * Display choices questions and text questions;
  * Display saved responses;
  * Add another page to edit answers if this question is not finalized by vendor
