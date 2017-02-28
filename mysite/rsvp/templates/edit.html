@@ -1,0 +1,86 @@
+{% extends "base.html" %}  
+{% load staticfiles %}  
+{% block title %}Event Edit{% endblock %}  
+  
+{% block content %}  
+  
+<div class="container">  
+    <div class="row">  
+        <div class="col-md-10 col-md-offset-1">  
+            <div class="col-md-3 col-md-offset-1"> 
+                <table class="table table-hover">  
+                    <thead>
+                            <th>Owners</th>  
+                    </thead>  
+
+                    <tbody id = "owner_cell">  
+                        {% for owner in owners %}  
+                        <tr>  
+                            <td>  {{ owner.user.name }} </td>   
+                        </tr> 
+
+                        {% endfor %}  
+                    </tbody>
+
+                </table>  
+            </div>
+
+             <div class="col-md-3 col-md"> 
+                <table class="table table-hover">  
+                    <thead>
+                            <th>Vendors</th>  
+                    </thead>  
+
+                    <tbody>  
+                        {% for vendor in vendors %}  
+                        <tr>  
+                            <td>  {{ vendor.user.name }}  </a></td>   
+                        </tr> 
+                        {% endfor %} 
+ 
+                    </tbody>
+
+                </table>  
+            </div>
+
+             <div class="col-md-3 col-md"> 
+               <table class="table table-hover">  
+                    <thead>
+                            <th>Guests</th>  
+                    </thead>  
+
+                    <tbody>  
+                        {% for guest in guests %}  
+                        <tr>  
+                            <td>  {{ guest.user.name }}  </a></td>   
+                        </tr> 
+                        {% endfor %} 
+                    </tbody>
+
+                </table>  
+            </div> 
+
+            </div> 
+            </div>
+                <!--
+                    <div class="col-md-3 col-md-offset-4">  
+                        <a href="/rsvp/add/?id={{event.id}} " class="btn btn btn-primary btn-block"> Add </a></button>  
+                    </div>  
+                -->
+                <div class="col-md-3 col-md-offset-4">  
+                    <button class="btn btn-primary btn-block" onclick= "myFunction()" > Add </button>  
+                </div>                
+        </div>  
+    </div>  
+</div>
+
+{% block javascript %}
+<script>
+function myFunction() {
+    document.getElementById("owner_cell").innerHTML += "<tr><td>Test</td></tr>"    ;
+}
+
+</script>
+{% endblock %}  
+
+{% endblock %}  

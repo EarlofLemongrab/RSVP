@@ -35,11 +35,26 @@ class Event(models.Model):
     def __unicode__(self):
         return self.name
 
-class Question(models.Model):
-    event = models.ForeignKey(Event)
-    question_text = models.CharField(max_length=50)
+class ChoiceQuestion(models.Model):
+    event = models.ForeignKey(Event,on_delete=models.CASCADE)
+    question_text = models.CharField(max_length=200)
 
 class Choice(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    question = models.ForeignKey(ChoiceQuestion, on_delete=models.CASCADE)
     choice_text = models.CharField(max_length=200)
-    votes = models.IntegerField(default=0)
+
+class ChoiceResponse(models.Model):
+    user_choice = models.ForeignKey(Choice,on_delete=models.CASCADE)
+    username = models.CharField(max_length=50,blank=True,null=True)
+
+class TextQuestion(models.Model):
+    event = models.ForeignKey(Event,on_delete=models.CASCADE)
+    question_text = models.CharField(max_length=200)
+
+class TextResponse(models.Model):
+    question = models.ForeignKey(TextQuestion,on_delete=models.CASCADE)
+    response_text = models.CharField(max_length=200)
+
+    
+        
+

@@ -1,19 +1,17 @@
-from django.conf.urls import patterns, include, url  
-from rsvp import views                                      
+from django.conf.urls import include, url                                     
 from django.contrib import admin  
 admin.autodiscover()  
 from . import views
 
 urlpatterns = [
-    url(r'^admin/doc/', include('django.contrib.admindocs.urls')),  
-    url(r'^admin/', include(admin.site.urls)),  
     url(r'^$',views.index),  
     url(r'^regist/$',views.regist),  
     url(r'^login/$',views.login),  
-    url(r'^logout/$',views.logout),  
-    #url(r'^cancel/$',views.cancel),  
+    url(r'^logout/$',views.logout),   
     url(r'^events/$',views.events),  
-    #url(r'^viewroom/$',views.viewroom),  
-    #url(r'^detail/$',views.detail),  
-    #url(r'^order/$',views.order),  
+    url(r'^ownerdetails/$',views.ownerdetails),  
+    url(r'^create/$',views.create),
+    url(r'^edit/$',views.edit),
+    url(r'^add/$',views.add),
+    #url(r'^ajax/validate_username/$', views.validate_username, name='validate_username'),
 ]

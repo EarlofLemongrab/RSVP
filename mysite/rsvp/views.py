@@ -36,7 +36,7 @@ def regist(req):
                 new_myuser = MyUser(user=newuser,email=req.POST.get("email"),name = username)      
                 new_myuser.save()  
                 status = "success"  
-                return HttpResponseRedirect("/login/")  
+                return HttpResponseRedirect("/rsvp/login/")  
     return render(req,"regist.html",{"status":status,"user":""})  
   
 def login(req):  
@@ -50,14 +50,15 @@ def login(req):
         if user is not None:  
                 auth.login(req,user)          
                 req.session["username"]=username      
-                return HttpResponseRedirect('/')  
+                return HttpResponseRedirect('/rsvp/')  
         else:  
             status="not_exist_or_passwd_err"  
-    return render(req,"login.html",{"status":status})  
-
+    return render(req,"login.html",{"status":status}) 
+     
+@login_required
 def logout(req):  
     auth.logout(req)  
-    return HttpResponseRedirect('/')  
+    return HttpResponseRedirect('/rsvp/')  
 
 @login_required
 def events(req):
@@ -90,7 +91,7 @@ def ownerdetails(req):
     try:  
         event = Event.objects.get(pk=Id) 
     except:               
-        return HttpResponseRedirect('/events/')    
+        return HttpResponseRedirect('/rsvp/events/')    
     content = {"event":event,"user":user}  
     return render(req,'ownerdetails.html',content)
 
@@ -114,9 +115,91 @@ def create(req):
         event = Event(name=name,date=date)
         event.save()
         event.owners.add(o)
-        return  HttpResponseRedirect("/events/")
+        return  HttpResponseRedirect("/rsvp/events/")
     
     return render(req,"create.html",{})
+
+@login_required
+def edit(req):
+    username = req.session.get('username','')  
+    if username != '':  
+        user = MyUser.objects.get(user__username=username)  
+    else:  
+        user = ''  
+
+    Id = req.GET.get("id","") 
+    req.session["id"]=Id    
+
+    try:  
+        event = Event.objects.get(pk=Id) 
+        owners = event.owners.all()
+        vendors = event.vendors.all()
+        guests = event.guests.all()
+    except:               
+        return HttpResponseRedirect('/rsvp/events/')    
+    
+    content = {"event":event,"user":user,"owners":owners,"vendors":vendors,"guests":guests}  
+    return render(req,'edit.html',content)
+
+@login_required
+def add(req):
+    username = req.session.get('username','')  
+    if username != '':  
+        user = MyUser.objects.get(user__username=username)  
+    else:  
+        user = ''                     
+    
+    Id = req.GET.get("id","") 
+    req.session["id"]=Id   
+
+    if Id == "":
+        return HttpResponseRedirect('/rsvp/events/')
+    event = Event.objects.get(pk=Id)
+
+    if req.POST:
+        add_owner = req.POST.get("ownername","")
+        add_vendor = req.POST.get("vendorname","")
+        add_guest = req.POST.get("guestname","")
+
+        try:    
+            u1 = MyUser.objects.get(name=add_owner)
+            try:
+                o = Owner.objects.get(user__name=add_owner)
+            except Owner.DoesNotExist:
+                u = MyUser.objects.get(name=add_owner)
+                o = Owner(user=u)  
+                o.save()
+            event.owners.add(o)
+        except  MyUser.DoesNotExist:
+            return  HttpResponseRedirect("/rsvp/add/")
+
+        try:    
+            u2 = MyUser.objects.get(name=add_vendor)
+            try:
+                v = Vendor.objects.get(user__name=add_vendor)
+            except Vendor.DoesNotExist:
+                u = MyUser.objects.get(name=add_vendor)
+                v = Vendor(user=u)
+                v.save()
+            event.vendors.add(v)
+        except  MyUser.DoesNotExist:
+            return  HttpResponseRedirect("/rsvp/add/")
+
+        try:
+            u3 = MyUser.objects.get(name=add_guest)            
+            try:
+                g = Guest.objects.get(user__name=add_guest)
+            except Guest.DoesNotExist:
+                u = MyUser.objects.get(name=add_guest)
+                g = Guest(user=u)
+                g.save()
+            event.guests.add(g)
+        except  MyUser.DoesNotExist:
+            return  HttpResponseRedirect("/rsvp/add/")
+
+        return  HttpResponseRedirect("/rsvp/events/")
+    
+    return render(req,"add.html",{})
 
 """
 def get_acad_list():  

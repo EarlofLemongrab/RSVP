@@ -14,16 +14,16 @@
                         <tr>  
                             <th>Owner Events</th>  
                             <th>Event Date</th>
-                            <th><a href="/create">New Event</th>
+                            <th><a href="/rsvp/create">New Event</th>
                         </tr>
                     </thead>  
 
                     <tbody>  
                         {% for event in owner_events %}  
                         <tr>  
-                            <td><a href="/ownerdetails/?id={{event.id}}">  {{ event.name }}  </a></td>   
+                            <td><a href="/rsvp/ownerdetails/?id={{event.id}}">  {{ event.name }}  </a></td>   
                              <td>  {{ event.date }} </td>
-                             <td></td>
+                             <td><a href="/rsvp/edit/?id={{event.id}}"> Edit</td>
                         </tr>  
                         {% endfor %}  
                     </tbody>  
@@ -39,7 +39,7 @@
                     <tbody>  
                         {% for event in vendor_events %}  
                         <tr>  
-                            <td><a href="/vendordetails/?id={{event.id}}">  {{ event.name }}  </td>   
+                            <td><a href="/rsvp/vendordetails/?id={{event.id}}">  {{ event.name }}  </td>   
                             <td>  {{ event.date }}  </td>
                         </tr>  
                         {% endfor %}  
@@ -57,7 +57,7 @@
                     <tbody>  
                         {% for event in guest_events %}  
                         <tr>  
-                            <td><a href="/guestdetails/?id={{event.id}}">  {{ event.name }}  </td> 
+                            <td><a href="/rsvp/guestdetails/?id={{event.id}}">  {{ event.name }}  </td> 
                              <td>  {{ event.date }} </td>   
                         </tr>  
                         {% endfor %}  
