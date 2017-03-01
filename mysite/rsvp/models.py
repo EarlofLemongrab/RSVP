@@ -24,7 +24,6 @@ class Guest(models.Model):
     user = models.OneToOneField(MyUser)
 
 
-
 class Event(models.Model):
     owners = models.ManyToManyField(Owner, blank = True)
     vendors = models.ManyToManyField(Vendor,blank = True)
@@ -38,6 +37,8 @@ class Event(models.Model):
 class ChoiceQuestion(models.Model):
     event = models.ForeignKey(Event,on_delete=models.CASCADE)
     question_text = models.CharField(max_length=200)
+    vendors = models.ManyToManyField(Vendor,blank=True)
+    #finalized = models.BoolField(blank=True)
 
 class Choice(models.Model):
     question = models.ForeignKey(ChoiceQuestion, on_delete=models.CASCADE)
@@ -50,10 +51,13 @@ class ChoiceResponse(models.Model):
 class TextQuestion(models.Model):
     event = models.ForeignKey(Event,on_delete=models.CASCADE)
     question_text = models.CharField(max_length=200)
+    vendors = models.ManyToManyField(Vendor,blank=True)
+    #finalized = models.BoolField(blank=True)
 
 class TextResponse(models.Model):
     question = models.ForeignKey(TextQuestion,on_delete=models.CASCADE)
     response_text = models.CharField(max_length=200)
+    username = models.CharField(max_length=50,blank=True,null=True)
 
     
         

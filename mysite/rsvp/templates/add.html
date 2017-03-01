@@ -8,6 +8,8 @@
         <div class="col-md-6 col-md-offset-3 col-sm-10 col-sm-offset-1">  
             <form method="POST" role="form" class="form-horizontal">   
              {% csrf_token %}  
+             <h4 class="text-center">Leave blank for any fields you do not wish to change.</h4>
+
                 <h3 class="form-signin-heading text-center">Add</h3>    
                 
                 <div class="form-group">  
@@ -32,10 +34,52 @@
                 </div> 
 
                 <div class="form-group">  
-                    <div class="col-md-4 col-md-offset-3">  
-                        <button class="btn btn-primary btn-block" type="submit"> Create </button>  
+                    <label for="id_guest_date" class="col-md-3 control-label">New Text Question</label>  
+                    <div class="col-md-9">  
+                      <input type="text" name="guestname" class="form-control">
+                    </div>  
+                </div> 
+
+                <div class="form-group">
+                    <label for="id_guest_date" class="col-md-3 control-label">Visible to Vendors?</label>  
+                    <div class="col-md-9"> 
+                    <input type="radio" name="visible1" value="true" checked> Yes
+                    <input type="radio" name="visible1" value="false"> No 
+                    </div>
+                </div> 
+
+                <div class="form-group">  
+                    <label for="id_guest_date" class="col-md-3 control-label">New Choice Question</label>  
+                    <div class="col-md-9">  
+                      <input type="text" name="guestname" class="form-control">
+                    </div>  
+                </div> 
+
+                <div class="form-group">
+                    <label for="id_guest_date" class="col-md-3 control-label">Visible to Vendors?</label>  
+                    <div class="col-md-9"> 
+                    <input type="radio" name="visible2" value="true" checked> Yes
+                    <input type="radio" name="visible2" value="false"> No
+                    </div>
+                </div> 
+
+
+                <div class="form-group">  
+                    <label for="id_guest_date" class="col-md-3 control-label">Number of Choices</label>  
+                    <div class="col-md-3">  
+                      <input type="number" name="guestname" class="form-control" id="choicenumber">
+                    </div><div class="col-md-3">
+
+                    <button class="btn btn-primary btn-block" onclick="render2()" id = "choice" name = "choicenumber"> Render </button> </div>
+                </div> 
+
+                <div class="form-group">  
+                    <div class="col-md-3 col-md-offset-5">  
+                        <button class="btn btn-primary btn-block" type="submit"> Add Info </button>  
                     </div>  
                 </div>                 
+
+
 
             </form>  
         </div>  
@@ -43,3 +87,19 @@
 </div>  
   
 {% endblock %}  
+
+
+{% block javascript}
+<script>
+    function render2(){
+        console.log("click")
+         choicenumber = $("#choicenumber").val();
+
+         for(var i = 0; i < choicenumber; i++){
+            $("#choicenumber").prepend("<div class="form-group"><label for="id_guest_date" class="col-md-3 control-label">New Choice Question</label><div class="col-md-9"><input type="text" name="guestname" class="form-control"></div></div> ")
+         }
+
+    }
+
+</script>
+{% endblock}

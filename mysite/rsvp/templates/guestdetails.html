@@ -1,0 +1,62 @@
+{% extends "base.html" %}  
+{% load staticfiles %}  
+{% block title %}Guest Details{% endblock %}  
+  
+{% block content %}  
+  
+<div class="container">  
+    <div class="row">  
+        <div class="col-md-10 col-md-offset-1">  
+            <h3>Guest Questions</h3>
+
+             <div class="col-md-3 col-md"> 
+                <table class="table table-hover">  
+                    <thead>
+                            <th>Text Questions</th>  
+                    </thead>  
+
+                    <tbody>  
+                        {% for t in textquestions %}  
+                        <tr>  
+                            <td>  {{ t.question_text }}  </a></td>   
+                        </tr> 
+                        {% endfor %} 
+ 
+                    </tbody>
+
+                </table>  
+            </div>
+
+             <div class="col-md-3 col-md"> 
+               <table class="table table-hover">  
+                    <thead>
+                            <th>Choice Questions</th>  
+                    </thead>  
+
+                    <tbody>  
+                        {% for c in choicequestions %}  
+                        <tr>  
+                            <td>  {{ c.question_text }}  </a></td>   
+                        </tr> 
+                        {% endfor %} 
+                    </tbody>
+
+                </table>  
+            </div> 
+
+            </div> 
+            </div>
+                <!--div class="col-md-3 col-md-offset-4">  
+                    <button class="btn btn-primary btn-block" onclick= "myFunction()" > Add </button>  
+                </div-->                
+        </div>  
+
+                <div class="col-md-3 col-md-offset-4">  
+                        <a href="/rsvp/add/?id={{event.id}} " class="btn btn btn-primary btn-block">Add Peole</a></button>  
+                </div>
+
+    </div>  
+
+</div>
+
+{% endblock %}  

@@ -10,7 +10,7 @@ from django.contrib import auth
 from models import *  
 from django.contrib.auth.decorators import login_required
 from datetime import datetime 
-
+import json
  
 def index(req):   
     username=req.session.get('username', '')  
@@ -201,7 +201,72 @@ def add(req):
     
     return render(req,"add.html",{})
 
+@login_required
+def addq(req):
+    username = req.session.get('username','')
+    if username != '':
+        user = MyUser.objects.get(user__username=username)
+    else:
+        user = ''
+    Id = req.GET.get("id","") 
+    req.session["id"]=Id  
+    if Id == "":  
+        return HttpResponseRedirect('/rsvp/events/')  
+    if req.POST:
+        question_text = req.POST.get("question_text","")
+        #event_id = req.POST.get("event_id")
+        event = Event.objects.get(pk=Id)
+        q = TextQuestion(event=event,question_text=question_text)
+        q.save()
+        response_data = {}
+        response_data['result'] = 'Create question successful'
+        response_data['question_id'] = q.pk
+        response_data['text'] = q.question_text
+        response_data['author'] = username
+        return HttpResponse(
+            json.dumps(response_data),
+            content_type = "application/json"
+        )
+    else:
+        return HttpResponse(
+            json.dumps({"nothing to see": "this isnt happening"}),
+            content_type = "application/json"
+        )
+
+@login_required
+def guestdetails(req):
+    username = req.session.get('username','')  
+    if username != '':  
+        user = MyUser.objects.get(user__username=username)  
+    else:  
+        user = ''  
+
+    Id = req.GET.get("id","") 
+    req.session["id"]=Id    
+
+    #try:  
+    event = Event.objects.get(pk=Id) 
+    textquestions = event.textquestion_set.all()
+    choicequestions = event.choicequestion_set.all()
+    #except:               
+    #    return HttpResponseRedirect('/rsvp/events/')    
+    
+    content = {"event":event,"user":user,"textquestions":textquestions,"choicequestions":choicequestions}  
+    return render(req,'guestdetails.html',content)
 """
+@login_required
+def addquestion(req):
+    username = req.session.get('username','')  
+    if username != '':  
+        user = MyUser.objects.get(user__username=username)  
+    else:  
+        user = ''                     
+    
+    Id = req.GET.get("id","") 
+    req.session["id"]=Id
+
+    event = Event.objects.get(pk=Id)   
+
 def get_acad_list():  
     room_list = ConfeRoom.objects.all() 
     acad_list = set()  

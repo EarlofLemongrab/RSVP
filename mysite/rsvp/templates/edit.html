@@ -62,25 +62,71 @@
 
             </div> 
             </div>
-                <!--
-                    <div class="col-md-3 col-md-offset-4">  
-                        <a href="/rsvp/add/?id={{event.id}} " class="btn btn btn-primary btn-block"> Add </a></button>  
-                    </div>  
-                -->
-                <div class="col-md-3 col-md-offset-4">  
+                
+            <div class="col-md-9 col-md-offset-1"> 
+                <table class="table table-hover"  id="questions_table">  
+                    <thead>
+                            <th>Text Questions</th>  
+                    </thead>  
+
+                    <tbody>  
+                        {% for owner in owners %}  
+                        <tr>  
+                            <td>  {{ owner.user.name }} </td>   
+                        </tr> 
+
+                        {% endfor %}  
+                    </tbody>
+
+                </table>  
+            </div>
+
+
+                <!--div class="col-md-3 col-md-offset-4">  
                     <button class="btn btn-primary btn-block" onclick= "myFunction()" > Add </button>  
-                </div>                
+                </div-->                
         </div>  
+
+                <div class="col-md-3 col-md-offset-4">  
+                        <a href="/rsvp/add/?id={{event.id}} " class="btn btn btn-primary btn-block">Add Peole</a></button>  
+                </div>
+
     </div>  
+
 </div>
-
-{% block javascript %}
-<script>
-function myFunction() {
-    document.getElementById("owner_cell").innerHTML += "<tr><td>Test</td></tr>"    ;
-}
-
-</script>
-{% endblock %}  
+<br><br><br>
+      <form method="POST" role="form" class="form-horizontal" id="post-form">  
+        {% csrf_token %}  
+        <h1 class="form-signin-heading text-center">New Question</h1>  
+        <div class="col-md-7 col-md-offset-2">  
+            <input type="text" class="form-control" required name="question_text" id="the_post" autofocus="">  
+        </div>    
+        <div class="col-md-2">
+        <input type="submit" value="Add" class="btn btn btn-primary btn-block" id="btn">
+        </div>
+        <!-- <button class="btn btn btn-primary btn-block" onclick="myFunction()">add</button> -->
+    </form>  
+ {% block javascript %}
+    <script>
+    $('#post-form').on('submit',function(e){
+        console.log("click submit on event")
+        e.preventDefault()
+        $.ajax({
+            url: '/rsvp/addq/?id={{event.id}}',
+            type: "POST",
+            data: {
+                'question_text':$('#the_post').val(),
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+            },
+            success: function(data){
+                console.log(data)
+                $('#the_post').val('')
+                $("#questions_table").prepend("<tr><td><li><strong>"+data.text+"</strong></li></td></tr>")
+            }
+        })
+    });
+    </script>
+  
+{% endblock %}
 
 {% endblock %}  
