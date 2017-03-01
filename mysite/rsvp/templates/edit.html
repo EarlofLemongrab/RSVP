@@ -67,12 +67,14 @@
                 <table class="table table-hover"  id="questions_table">  
                     <thead>
                             <th>Text Questions</th>  
+                            <th>Add Vendor</th>
                     </thead>  
 
                     <tbody>  
-                        {% for owner in owners %}  
+                        {% for t in textquestions %}  
                         <tr>  
-                            <td>  {{ owner.user.name }} </td>   
+                            <td>  {{ t.question_text }} </td>
+                            <td><a href="/rsvp/addtextvendor/?id={{t.id}}">Add</td>
                         </tr> 
 
                         {% endfor %}  
@@ -81,6 +83,25 @@
                 </table>  
             </div>
 
+            <div class="col-md-9 col-md-offset-1"> 
+                <table class="table table-hover"  id="questions_table">  
+                    <thead>
+                            <th>Choice Questions</th>  
+                            <th>Add Vendor</th>
+                    </thead>  
+
+                    <tbody>  
+                        {% for t in choicequestions %}  
+                        <tr>  
+                            <td>  {{ t.question_text }} </td>   
+                            <td><a href="/rsvp/addchoicevendor/?id={{t.id}}">Add</a></td>
+                        </tr> 
+
+                        {% endfor %}  
+                    </tbody>
+
+                </table>  
+            </div>
 
                 <!--div class="col-md-3 col-md-offset-4">  
                     <button class="btn btn-primary btn-block" onclick= "myFunction()" > Add </button>  

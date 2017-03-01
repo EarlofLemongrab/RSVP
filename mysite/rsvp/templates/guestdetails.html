@@ -6,24 +6,29 @@
   
 <div class="container">  
     <div class="row">
-        <div class="col-md-10 col-md-offset-5"> 
+        <div class="col-md-12 col-md-offset-5"> 
             <h2>{{event.name}}</h2> 
         </div>
 
 
-        <div class="col-md-10 col-md-offset-1">  
+        <div class="col-md-12 col-md-offset-0">  
             <h3>Guest Questions</h3>
 
              <div class="col-md-3 col-md"> 
                 <table class="table table-hover">  
                     <thead>
-                            <th>Text Questions</th>  
+                            <th>Text Questions</th> 
+                            <th>Finalized</th> 
+                            <th>Edit</th>
                     </thead>  
 
                     <tbody>  
                         {% for t in textquestions %}  
                         <tr>  
-                            <td>  {{ t.question_text }}  </a></td>   
+                            <td>  {{ t.question_text }}  </td> 
+                            <td>  {{t.finalized}} </td>
+                            <td><a href="/rsvp/edittextresponse/?id={{t.id}}">Edit</td>
+                            
                         </tr> 
                         {% endfor %} 
  
@@ -32,21 +37,25 @@
                 </table>  
             </div>
 
-             <div class="col-md-3 col-md"> 
+             <div class="col-md-2 col-md"> 
                 <table class="table table-hover">  
                     <thead>
                             <th>My Responses</th>  
+                            
                     </thead>  
 
                     <tbody>  
                         {% for t in textresponse %}  
                         {% if t.count > 0 %}
                         <tr>  
-                            <td>  {{ t.first.response_text }}  </a></td>   
+                            <td>  {{ t.first.response_text }}  </a></td>
+                            
+                               
                         </tr> 
                         {% else %}
                         <tr>  
-                            <td>  Not answered yet.  </a></td>   
+                            <td>  Not answered yet.  </a></td>
+                            
                         </tr> 
                         {% endif  %}
                         {% endfor %} 
@@ -57,16 +66,20 @@
             </div>
 
 
-             <div class="col-md-3 col-md"> 
+             <div class="col-md-4 col-md"> 
                <table class="table table-hover">  
                     <thead>
                             <th>Choice Questions</th>  
+                            <th>Finalized</th>
+                            <th>Reselect</th>
                     </thead>  
 
                     <tbody>  
                         {% for c in choicequestions %}  
                         <tr>  
-                            <td>  {{ c.question_text }}  </a></td>   
+                            <td>  {{ c.question_text }}  </a></td>
+                            <td>  {{ c.finalized }} </td> 
+                            <td><a href="/rsvp/editchoiceresponse/?id={{c.id}}">Edit</a></td>  
                         </tr> 
                         {% endfor %} 
                     </tbody>
@@ -77,20 +90,20 @@
              <div class="col-md-3 col-md"> 
                <table class="table table-hover">  
                     <thead>
-                            <th>My Mulitple Choices</th>  
+                            <th>My Choices</th>  
                     </thead>  
 
                     <tbody>  
-                          {% for c in choicequestions %}  
+                        {% for cr in choiceresponse %}  
+                        {% if cr.count > 0 %}
                         <tr>  
-                             <td>
-                             <select>
-                             {% for q in c.choice_set.all %}
-                                 <option>{{q.choice_text}}</option>
-                             {% endfor %}
-                             </select>
-                             </td>
-                        </tr> 
+                            <td>  {{cr.first.choice_text}} </td>   
+                        </tr>
+                        {% else %}
+                        <tr>  
+                            <td>  Not answered yet </td>   
+                        </tr>
+                        {% endif  %} 
                         {% endfor %} 
                     </tbody>
                 </table>  

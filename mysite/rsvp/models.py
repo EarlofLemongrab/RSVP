@@ -40,6 +40,7 @@ class Event(models.Model):
     guests = models.ManyToManyField(Guest, blank = True)
     name = models.CharField(max_length=50)
     date = models.DateTimeField(null = True, blank = True)
+    plusone = models.BooleanField(null= False, blank = False)
 
     def __unicode__(self):
         return self.name
@@ -48,7 +49,7 @@ class ChoiceQuestion(models.Model):
     event = models.ForeignKey(Event,on_delete=models.CASCADE)
     question_text = models.CharField(max_length=200)
     vendors = models.ManyToManyField(Vendor,blank=True)
-    #finalized = models.BoolField(blank=True)
+    finalized = models.BooleanField(blank=False,null=False)
 
     def __unicode__(self):
         return self.question_text
@@ -57,7 +58,6 @@ class ChoiceQuestion(models.Model):
 class Choice(models.Model):
     question = models.ForeignKey(ChoiceQuestion, on_delete=models.CASCADE)
     choice_text = models.CharField(max_length=200)
-
     def __unicode__(self):
         return self.choice_text    
 
@@ -72,7 +72,7 @@ class TextQuestion(models.Model):
     event = models.ForeignKey(Event,on_delete=models.CASCADE)
     question_text = models.CharField(max_length=200)
     vendors = models.ManyToManyField(Vendor,blank=True)
-    #finalized = models.BoolField(blank=True)
+    finalized = models.BooleanField(blank=False,null=False)
 
     def __unicode__(self):
         return self.question_text

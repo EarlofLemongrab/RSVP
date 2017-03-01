@@ -14,14 +14,16 @@
                         <tr>  
                             <th>Text Questions</th>  
                             <th>Status</th>
+                            <th>Set Finalized</th>
                          </tr>  
                     </thead>  
 
                      <tbody>  
                         {% for t in textquestions %}  
                         <tr>  
-                            <td>  {{ t.question_text }}  </td>   
-                              <td> Set Finalized   </td>
+                            <td> {{ t.question_text }}  </td>   
+                            <td> {{t.finalized}}   </td>
+                            <td><a href="/rsvp/textfinalized/?id={{t.id}}">   Set Finalized</a></td>
                         </tr> 
 
                         {% endfor %} 
@@ -35,6 +37,7 @@
                         <tr>  
                             <th>Choice Questions</th>  
                              <th>Status</th>
+                             <th>Set Finalized</th>
                          </tr>  
                     </thead>  
 
@@ -42,7 +45,8 @@
                         {% for c in choicequestions %}  
                         <tr>  
                             <td>  {{ c.question_text }} </td>  
-                              <td> Set Finalized   </td> 
+                              <td> {{ c.finalized }}   </td> 
+                             <td><a href="/rsvp/choicefinalized/?id={{c.id}}">Set Finalized</a></td>
                         </tr> 
                         {% endfor %} 
                     </tbody>
