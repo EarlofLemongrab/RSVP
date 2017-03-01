@@ -214,7 +214,6 @@ def addq(req):
         return HttpResponseRedirect('/rsvp/events/')  
     if req.POST:
         question_text = req.POST.get("question_text","")
-        #event_id = req.POST.get("event_id")
         event = Event.objects.get(pk=Id)
         q = TextQuestion(event=event,question_text=question_text)
         q.save()
@@ -244,14 +243,18 @@ def guestdetails(req):
     Id = req.GET.get("id","") 
     req.session["id"]=Id    
 
-    #try:  
-    event = Event.objects.get(pk=Id) 
-    textquestions = event.textquestion_set.all()
-    choicequestions = event.choicequestion_set.all()
-    #except:               
-    #    return HttpResponseRedirect('/rsvp/events/')    
+    try:  
+        event = Event.objects.get(pk=Id) 
+        textquestions = event.textquestion_set.all()
+        choicequestions = event.choicequestion_set.all()
+        textresponse = []
+        for textquestion in textquestions:
+            textresponse.append(textquestion.textresponse_set.filter(username=username))
+    #print(textresponse)
+    except:               
+        return HttpResponseRedirect('/rsvp/events/')    
     
-    content = {"event":event,"user":user,"textquestions":textquestions,"choicequestions":choicequestions}  
+    content = {"event":event,"user":user,"textquestions":textquestions,"choicequestions":choicequestions,"textresponse":textresponse}  
     return render(req,'guestdetails.html',content)
 """
 @login_required

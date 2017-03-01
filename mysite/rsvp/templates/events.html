@@ -21,7 +21,7 @@
                     <tbody>  
                         {% for event in owner_events %}  
                         <tr>  
-                            <td><a href="/rsvp/ownerdetails/?id={{event.id}}">  {{ event.name }}  </a></td>   
+                            <td><a href="/rsvp/edit/?id={{event.id}}">  {{ event.name }}  </a></td>   
                              <td>  {{ event.date }} </td>
                              <td><a href="/rsvp/edit/?id={{event.id}}"> Edit</td>
                         </tr>  

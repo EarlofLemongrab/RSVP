@@ -5,7 +5,12 @@
 {% block content %}  
   
 <div class="container">  
-    <div class="row">  
+    <div class="row">
+        <div class="col-md-10 col-md-offset-5"> 
+            <h2>{{event.name}}</h2> 
+        </div>
+
+
         <div class="col-md-10 col-md-offset-1">  
             <h3>Guest Questions</h3>
 
@@ -28,6 +33,31 @@
             </div>
 
              <div class="col-md-3 col-md"> 
+                <table class="table table-hover">  
+                    <thead>
+                            <th>My Responses</th>  
+                    </thead>  
+
+                    <tbody>  
+                        {% for t in textresponse %}  
+                        {% if t.count > 0 %}
+                        <tr>  
+                            <td>  {{ t.first.response_text }}  </a></td>   
+                        </tr> 
+                        {% else %}
+                        <tr>  
+                            <td>  Not answered yet.  </a></td>   
+                        </tr> 
+                        {% endif  %}
+                        {% endfor %} 
+ 
+                    </tbody>
+
+                </table>  
+            </div>
+
+
+             <div class="col-md-3 col-md"> 
                <table class="table table-hover">  
                     <thead>
                             <th>Choice Questions</th>  
@@ -44,17 +74,35 @@
                 </table>  
             </div> 
 
+             <div class="col-md-3 col-md"> 
+               <table class="table table-hover">  
+                    <thead>
+                            <th>My Mulitple Choices</th>  
+                    </thead>  
+
+                    <tbody>  
+                          {% for c in choicequestions %}  
+                        <tr>  
+                             <td>
+                             <select>
+                             {% for q in c.choice_set.all %}
+                                 <option>{{q.choice_text}}</option>
+                             {% endfor %}
+                             </select>
+                             </td>
+                        </tr> 
+                        {% endfor %} 
+                    </tbody>
+                </table>  
+
+
+
             </div> 
             </div>
                 <!--div class="col-md-3 col-md-offset-4">  
                     <button class="btn btn-primary btn-block" onclick= "myFunction()" > Add </button>  
                 </div-->                
         </div>  
-
-                <div class="col-md-3 col-md-offset-4">  
-                        <a href="/rsvp/add/?id={{event.id}} " class="btn btn btn-primary btn-block">Add Peole</a></button>  
-                </div>
-
     </div>  
 
 </div>
