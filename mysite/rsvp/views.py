@@ -256,6 +256,28 @@ def guestdetails(req):
     
     content = {"event":event,"user":user,"textquestions":textquestions,"choicequestions":choicequestions,"textresponse":textresponse}  
     return render(req,'guestdetails.html',content)
+
+
+@login_required
+def vendordetails(req):
+    username = req.session.get('username','')  
+    if username != '':  
+        user = MyUser.objects.get(user__username=username)  
+    else:  
+        user = ''  
+
+    Id = req.GET.get("id","")
+    req.session["id"]=Id
+
+    #try:  
+    event = Event.objects.get(pk=Id) 
+    choicequestions = event.choicequestion_set.filter(vendors__user__name=username)
+    textquestions = event.textquestion_set.filter(vendors__user__name=username)
+    #except:               
+    #    return HttpResponseRedirect('/rsvp/events/')    
+    
+    content = {"event":event,"choicequestions":choicequestions,"textquestions":textquestions}  
+    return render(req,'vendordetails.html',content)
 """
 @login_required
 def addquestion(req):

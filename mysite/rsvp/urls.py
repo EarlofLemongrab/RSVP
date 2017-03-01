@@ -14,7 +14,8 @@ urlpatterns = [
     url(r'^edit/$',views.edit),
     url(r'^add/$',views.add),
     url(r'^addq/$',views.addq),
-    url(r'^guestdetails/$',views.guestdetails)
+    url(r'^guestdetails/$',views.guestdetails),
+    url(r'^vendordetails/$',views.vendordetails),
     #url(r'^addq/$',views.addquestion),
     #url(r'^ajax/validate_username/$', views.validate_username, name='validate_username'),
 ]
