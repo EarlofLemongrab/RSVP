@@ -25,4 +25,6 @@ urlpatterns = [
     url(r'^textquestiondetails/$',views.textquestiondetails),
     url(r'^choicequestiondetails/$',views.choicequestiondetails),
     url(r'^addchoice/$',views.addchoice),
+    url(r'^textquestionedit/$',views.textquestionedit),
+    url(r'^choicequestionedit/$',views.choicequestionedit),
 ]

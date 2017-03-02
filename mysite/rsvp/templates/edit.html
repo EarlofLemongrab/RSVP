@@ -75,13 +75,15 @@
                     <thead>
                             <th>Text Questions</th>  
                             <th>Add Vendor</th>
+			    <th>Edit Question</th>
                     </thead>  
 
                     <tbody>  
                         {% for t in textquestions %}  
                         <tr>  
-                            <td>  {{ t.question_text }} </td>
+                            <td> <a href="/rsvp/textquestiondetails/?id={{t.id}}"> {{ t.question_text }} </td>
                             <td><a href="/rsvp/addtextvendor/?id={{t.id}}">Add</td>
+			    <td><a href="/rsvp/textquestionedit/?id={{t.id}}">Edit</td>
                         </tr> 
 
                         {% endfor %}  
@@ -102,9 +104,10 @@
                     <tbody>  
                         {% for t in choicequestions %}  
                         <tr>  
-                            <td>  {{ t.question_text }} </td>   
+                            <td>  <a href="/rsvp/choicequestiondetails/?id={{t.id}}">{{ t.question_text }} </td>   
                             <td><a href="/rsvp/addchoicevendor/?id={{t.id}}">+Vendor</a></td>
                             <td><a href="/rsvp/addchoice/?id={{t.id}}">+Choice</a></td>
+			    <td><a href="/rsvp/choicequestionedit/?id={{t.id}}">Edit</td>
                         </tr> 
 
                         {% endfor %}  

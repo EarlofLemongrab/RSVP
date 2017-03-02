@@ -25,7 +25,7 @@ SECRET_KEY = 'x42iz=&se0!j)ha(==y52fqknwjkk07na0b%@tqf$^pipg7dee'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['colab-sbx-pvt-11.oit.duke.edu']
 
 
 # Application definition
@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'rsvp',
 ]
 
-MIDDLEWARE = [
+MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -113,6 +113,15 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+EMAIL_USE_TLS = True
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_PASSWORD = 'l0ngd0ng' #my gmail password
+EMAIL_HOST_USER = 'donglong.1993.01.02@gmail.com' #my gmail username
+EMAIL_PORT = 587
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
 
 
 # Static files (CSS, JavaScript, Images)

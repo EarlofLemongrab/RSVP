@@ -1,5 +1,5 @@
 from django.shortcuts import render
-
+from django.core.mail import send_mail
 from django.http import HttpResponseRedirect
 from django.http import HttpResponse
 from django.shortcuts import  render_to_response  
@@ -9,7 +9,8 @@ from django.contrib.auth.models import User
 from django.contrib import auth  
 from models import *  
 from django.contrib.auth.decorators import login_required
-from datetime import datetime 
+from datetime import datetime
+from django.conf import settings
 import json
  
 def index(req):   
@@ -110,7 +111,7 @@ def create(req):
         except:
             o = Owner(user=user)
             o.save()
-        name = req.POST.get("name","")
+        name = req.POST.get("eventname","")
         date = req.POST.get("date","") 
         event = Event(name=name,date=date)
         event.plusone = plusone
@@ -165,43 +166,61 @@ def add(req):
         add_vendor = req.POST.get("vendorname","")
         add_guest = req.POST.get("guestname","")
         plusone = req.POST.get("plusone","")
-        event.plusone = plusone
-        try:    
-            u1 = MyUser.objects.get(name=add_owner)
-            try:
-                o = Owner.objects.get(user__name=add_owner)
-            except Owner.DoesNotExist:
-                u = MyUser.objects.get(name=add_owner)
-                o = Owner(user=u)  
-                o.save()
-            event.owners.add(o)
-        except  MyUser.DoesNotExist:
-            return  HttpResponseRedirect("/rsvp/add/")
+        text_question = req.POST.get("textquestion","")
+        choice_question =req.POST.get("choicequestion","")
 
-        try:    
-            u2 = MyUser.objects.get(name=add_vendor)
+        if str(plusone) == 'on':
+            event.plusone = True
+        else:
+            event.plusone = False
+        event.save()
+        if add_owner!="":
+            try:  
+                u1 = MyUser.objects.get(name=add_owner)
+                try:
+                    o = Owner.objects.get(user__name=add_owner)
+                except Owner.DoesNotExist:
+                    u = MyUser.objects.get(name=add_owner)
+                    o = Owner(user=u)  
+                    o.save()
+                    event.owners.add(o)
+            except  MyUser.DoesNotexist:
+                print "no user"
+                return  HttpResponseRedirect("/rsvp/add/")
+        if add_vendor!="":
+            try:    
+                u2 = MyUser.objects.get(name=add_vendor)
+                print "added vendor "+u2.name
+                try:
+                    v = Vendor.objects.get(user__name=add_vendor)
+                    print "has vendor "+v.user.name
+                except Vendor.DoesNotExist:
+                    u = MyUser.objects.get(name=add_vendor)
+                    v = Vendor(user=u2)
+                    v.save()
+                    event.vendors.add(v)
+            except  MyUser.DoesNotExist:
+                return  HttpResponseRedirect("/rsvp/add/")
+        if add_guest!="":    
             try:
-                v = Vendor.objects.get(user__name=add_vendor)
-            except Vendor.DoesNotExist:
-                u = MyUser.objects.get(name=add_vendor)
-                v = Vendor(user=u)
-                v.save()
-            event.vendors.add(v)
-        except  MyUser.DoesNotExist:
-            return  HttpResponseRedirect("/rsvp/add/")
+                u3 = MyUser.objects.get(name=add_guest)            
+                try:
+                    g = Guest.objects.get(user__name=add_guest)
+                except Guest.DoesNotExist:
+                    u = MyUser.objects.get(name=add_guest)
+                    g = Guest(user=u)
+                    g.save()
+                    event.guests.add(g)
+            except  MyUser.DoesNotExist:
+                return  HttpResponseRedirect("/rsvp/add/")
+        if text_question!="":
+            tq = TextQuestion(event = event,question_text = text_question,finalized = False)
+            tq.save()
+        if choice_question!="":
+            cq = ChoiceQuestion(event = event,question_text = choice_question,finalized = False)
+            cq.save()
 
-        try:
-            u3 = MyUser.objects.get(name=add_guest)            
-            try:
-                g = Guest.objects.get(user__name=add_guest)
-            except Guest.DoesNotExist:
-                u = MyUser.objects.get(name=add_guest)
-                g = Guest(user=u)
-                g.save()
-            event.guests.add(g)
-        except  MyUser.DoesNotExist:
-            return  HttpResponseRedirect("/rsvp/add/")
-
+        
         return  HttpResponseRedirect("/rsvp/events/")
     
     return render(req,"add.html",{})
@@ -442,6 +461,9 @@ def textquestiondetails(req):
     content = {"q" : q, "textresponses" : text_responses}
     return render(req,"textquestiondetails.html",content)
 
+
+
+
 @login_required
 def choicequestiondetails(req):
     Id = req.GET.get("id","")
@@ -472,6 +494,62 @@ def addchoice(req):
         choices.add(new_choice)
 
     return render(req,"addchoice.html",{"choices":choices,"q":q})
+def textquestionedit(req):
+    username = req.session.get('username','')
+    if username != '':
+        user = MyUser.objects.get(user__username=username)
+    else:
+        user = ''
+        
+    Id = req.GET.get("id","")
+    req.session["id"]=Id
+    q = TextQuestion.objects.get(pk = Id)
+    event = q.event
+    print event
+    guest_set = event.guests.all()
+    print guest_set
+    for g in guest_set:
+        my_u = g.user
+        email = my_u.email
+        print "Sending to "+email
+        
+        send_mail(
+                'Your Answer of a reserved Event in ERSS RSVP might changed',
+                'Please go to check',
+                settings.EMAIL_HOST_USER,
+                [email],
+                fail_silently=False,
+            )
+    if req.POST:
+        new_question_text = req.POST.get("name","")
+            
+        q.question_text = new_question_text
+        q.save()
+        return  render(req,"textquestionedit.html",{"q" : q})
+    return  render(req,"textquestionedit.html",{"q" : q})
+
+def choicequestionedit(req):
+    username = req.session.get('username','')
+    if username != '':
+        user = MyUser.objects.get(user__username=username)
+    else:
+        user = ''
+        
+    Id = req.GET.get("id","")
+    req.session["id"]=Id
+    q = ChoiceQuestion.objects.get(pk = Id)
+    
+    if req.POST:
+        new_question_text = req.POST.get("name","")
+        
+        q.question_text = new_question_text
+        q.save()
+        return  render(req,"choicequestionedit.html",{"q" : q})
+    return  render(req,"choicequestionedit.html",{"q" : q})
+
+
+
+
 """
 @login_required
 def addquestion(req):
