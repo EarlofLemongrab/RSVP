@@ -25,7 +25,7 @@ SECRET_KEY = 'x42iz=&se0!j)ha(==y52fqknwjkk07na0b%@tqf$^pipg7dee'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['colab-sbx-pvt-11.oit.duke.edu','localhost']
+ALLOWED_HOSTS = ['colab-sbx-pvt-11.oit.duke.edu']
 
 
 # Application definition
