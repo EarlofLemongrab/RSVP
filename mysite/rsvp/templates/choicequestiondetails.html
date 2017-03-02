@@ -1,0 +1,39 @@
+{% extends "base.html" %}  
+{% load staticfiles %}  
+{% block title %}Question Detail{% endblock %}  
+  
+{% block content %}  
+  
+<div class="container">  
+    <div class="row">  
+        <div class="col-md-10 col-md-offset-1">  
+            <div class="col-md-9 col-md-offset-1">  
+
+                <table class="table table-hover">  
+                    <thead>  
+                        <tr>  
+                            <th>{{q.question_text}}</th> 
+                            <th>Guest</th> 
+                         </tr>  
+                    </thead>  
+
+                     <tbody>  
+                        {% for d in choiceresponses %}  
+                        <tr>  
+                            
+                            <td> {{ d.user_choice.choice_text}} </td> 
+                            <td> {{ d.username}} </td> 
+                            
+                        </tr> 
+                        {% endfor %} 
+
+                    </tbody>
+ 
+                </table> 
+            </div>  
+        </div>  
+    </div>  
+</div>  
+  
+  
+{% endblock %}  

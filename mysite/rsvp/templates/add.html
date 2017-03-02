@@ -40,29 +40,12 @@
                     </div>  
                 </div> 
 
-                <div class="form-group">
-                    <label for="id_guest_date" class="col-md-3 control-label">Visible to Vendors?</label>  
-                    <div class="col-md-9"> 
-                    <input type="radio" name="visible1" value="true" checked> Yes
-                    <input type="radio" name="visible1" value="false"> No 
-                    </div>
-                </div> 
-
                 <div class="form-group">  
                     <label for="id_guest_date" class="col-md-3 control-label">New Choice Question</label>  
                     <div class="col-md-9">  
                       <input type="text" name="choicequestion" class="form-control">
                     </div>  
                 </div> 
-
-                <div class="form-group">
-                    <label for="id_guest_date" class="col-md-3 control-label">Visible to Vendors?</label>  
-                    <div class="col-md-9"> 
-                    <input type="radio" name="visible2" value="true" checked> Yes
-                    <input type="radio" name="visible2" value="false"> No
-                    </div>
-                </div> 
-
 
                 <div class="form-group">  
                     <label for="id_guest_date" class="col-md-3 control-label">Number of Choices</label>  
@@ -72,10 +55,17 @@
 
                     <button class="btn btn-primary btn-block" onclick="render2()" id = "choice" name = "choicenumber"> Render </button> </div>
                 </div> 
+                
+                <div class="form-group">  
+                    <label for="id_event_date" class="col-md-3 control-label">Allow +1 ?</label>  
+                    <div class="col-md-9">  
+                      <input type="checkbox" id="cbox1" value="plusone" name = "plusone">
+                    </div>  
+                </div>
 
                 <div class="form-group">  
                     <div class="col-md-3 col-md-offset-5">  
-                        <button class="btn btn-primary btn-block" type="submit"> Add Info </button>  
+                        <button class="btn btn-primary btn-block" type="submit"> Edit Info </button>  
                     </div>  
                 </div>                 
 

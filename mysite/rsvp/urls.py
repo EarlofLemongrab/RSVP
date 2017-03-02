@@ -21,6 +21,7 @@ urlpatterns = [
     url(r'^addtextvendor/$',views.addtextvendor),
     url(r'^addchoicevendor/$',views.addchoicevendor),
     url(r'^edittextresponse/$',views.edittextresponse),
-    #url(r'^addq/$',views.addquestion),
-    #url(r'^ajax/validate_username/$', views.validate_username, name='validate_username'),
+    url(r'^editchoiceresponse/$',views.editchoiceresponse),
+    url(r'^textquestiondetails/$',views.textquestiondetails),
+    url(r'^choicequestiondetails/$',views.choicequestiondetails)
 ]

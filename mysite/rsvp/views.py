@@ -104,7 +104,7 @@ def create(req):
     else:  
         user = ''                     
     if req.POST:
-
+        plusone = req.POST.get("plusone","")
         try:
             o = Owner.objects.get(user=user) 
         except:
@@ -113,6 +113,7 @@ def create(req):
         name = req.POST.get("name","")
         date = req.POST.get("date","") 
         event = Event(name=name,date=date)
+        event.plusone = plusone
         event.save()
         event.owners.add(o)
         return  HttpResponseRedirect("/rsvp/events/")
@@ -137,10 +138,11 @@ def edit(req):
         guests = event.guests.all()
         textquestions = event.textquestion_set.all()
         choicequestions = event.choicequestion_set.all()
+        plusone = event.plusone
     except:               
         return HttpResponseRedirect('/rsvp/events/')    
     
-    content = {"event":event,"user":user,"owners":owners,"vendors":vendors,"guests":guests,"textquestions":textquestions,"choicequestions":choicequestions}  
+    content = {"event":event,"user":user,"owners":owners,"vendors":vendors,"guests":guests,"textquestions":textquestions,"choicequestions":choicequestions,"plusone" : plusone}  
     return render(req,'edit.html',content)
 
 @login_required
@@ -162,7 +164,8 @@ def add(req):
         add_owner = req.POST.get("ownername","")
         add_vendor = req.POST.get("vendorname","")
         add_guest = req.POST.get("guestname","")
-
+        plusone = req.POST.get("plusone","")
+        event.plusone = plusone
         try:    
             u1 = MyUser.objects.get(name=add_owner)
             try:
@@ -336,7 +339,7 @@ def addtextvendor(req):
         return  HttpResponseRedirect("/rsvp/events/")
     return  render(req,"addtextvendor.html",{})
     #return render(req,'addtextvendor.html',content)       
-
+@login_required
 def addchoicevendor(req):
     Id = req.GET.get("id","")
     req.session["id"]=Id                     
@@ -357,7 +360,7 @@ def addchoicevendor(req):
         return  HttpResponseRedirect("/rsvp/events/")
     return  render(req,"addchoicevendor.html",{})
 
-
+@login_required
 def edittextresponse(req):
 
     username = req.session.get('username','')  
@@ -368,10 +371,14 @@ def edittextresponse(req):
 
     Id = req.GET.get("id","")
     req.session["id"]=Id
+    q = TextQuestion.objects.get(pk = Id)
+
+    if q.finalized == True:
+        return HttpResponseRedirect("/rsvp/events/")
 
     if req.POST:
         new_response_text = req.POST.get("name","")
-        q = TextQuestion.objects.get(pk = Id)
+        
         query_set = q.textresponse_set.filter(username=username)
         if query_set.count() > 0:
             old_response = query_set.get(username=username)
@@ -381,15 +388,75 @@ def edittextresponse(req):
             inserted_response = TextResponse(question = q,response_text=new_response_text,username=username)
             inserted_response.save()
             q.textresponse_set.add(inserted_response)
-            q.save()
-            
-    
-        return  render(req,"edittextresponse.html",{})
+            q.save()     
+        return  render(req,"edittextresponse.html",{"q" : q})
 
-    return  render(req,"edittextresponse.html",{})
+    return  render(req,"edittextresponse.html",{"q" : q})
+
+@login_required
+def editchoiceresponse(req):
+
+    username = req.session.get('username','')  
+    if username != '':  
+        user = MyUser.objects.get(user__username=username)  
+    else:  
+        user = ''  
+
+    Id = req.GET.get("id","")
+    req.session["id"]=Id
+    q = ChoiceQuestion.objects.get(pk = Id)
+
+    if req.POST:
+        new_choice_text = req.POST.get("name","")
+        query_set = q.choice_set.filter(choiceresponse__username=username)
+
+        if query_set.count() > 0:
+            old_choice = query_set.first()
+            old_response = old_choice.choiceresponse_set.filter(username=username)
+            print(old_response.first())
+            old_response.first().delete()
+            new_Choice = Choice.objects.filter(choice_text=new_choice_text)
+            old_choice2 = ChoiceResponse(user_choice = new_Choice.first(), username=username)
+            old_choice2.save()
+
+        else:
+            #new_Choice = Choice(question = q,choice_text = new_choice_text)
+            new_Choice = Choice.objects.filter(choice_text=new_choice_text).first()
+            inserted_response = ChoiceResponse(user_choice = new_Choice,username=username)
+            inserted_response.save()
+            ##query_set.add(inserted_response)
+            ##query_set.save()            
+
+        return  render(req,"editchoiceresponse.html",{"q":q})
+
+    return  render(req,"editchoiceresponse.html",{"q":q})
 
 
+@login_required
+def textquestiondetails(req):
+    Id = req.GET.get("id","")
+    req.session["id"]=Id
+    q = TextQuestion.objects.get(pk = Id)
 
+    text_responses = q.textresponse_set.all()
+    content = {"q" : q, "textresponses" : text_responses}
+    return render(req,"textquestiondetails.html",content)
+
+@login_required
+def choicequestiondetails(req):
+    Id = req.GET.get("id","")
+    req.session["id"]=Id
+    q = ChoiceQuestion.objects.get(pk = Id)
+    choices = q.choice_set.all()
+    choiceresponses = []
+
+    for c in choices:
+        for d in ChoiceResponse.objects.filter(user_choice=c):
+            choiceresponses.append(d)
+
+    print(choiceresponses)
+    content = {"q" : q, "choiceresponses" : choiceresponses}
+    return render(req,"choicequestiondetails.html",content)    
 """
 @login_required
 def addquestion(req):

@@ -26,9 +26,12 @@
                         {% for t in textquestions %}  
                         <tr>  
                             <td>  {{ t.question_text }}  </td> 
-                            <td>  {{t.finalized}} </td>
-                            <td><a href="/rsvp/edittextresponse/?id={{t.id}}">Edit</td>
-                            
+                            <td>  {{ t.finalized  }} </td>
+                            <td>
+                            {% if t.finalized == False %}
+                            <a href="/rsvp/edittextresponse/?id={{t.id}}">Edit</a>
+                            {% endif %}
+                            </td>
                         </tr> 
                         {% endfor %} 
  
@@ -79,7 +82,11 @@
                         <tr>  
                             <td>  {{ c.question_text }}  </a></td>
                             <td>  {{ c.finalized }} </td> 
-                            <td><a href="/rsvp/editchoiceresponse/?id={{c.id}}">Edit</a></td>  
+                            <td>
+                            {% if c.finalized == False %}
+                            <a href="/rsvp/editchoiceresponse/?id={{c.id}}">Edit</a> 
+                            {% endif %}
+                            </td> 
                         </tr> 
                         {% endfor %} 
                     </tbody>
@@ -97,7 +104,7 @@
                         {% for cr in choiceresponse %}  
                         {% if cr.count > 0 %}
                         <tr>  
-                            <td>  {{cr.first.choice_text}} </td>   
+                            <td>  {{cr.last.choice_text}} </td>   
                         </tr>
                         {% else %}
                         <tr>  
