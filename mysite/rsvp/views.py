@@ -538,7 +538,21 @@ def choicequestionedit(req):
     Id = req.GET.get("id","")
     req.session["id"]=Id
     q = ChoiceQuestion.objects.get(pk = Id)
-    
+    event = q.event
+    guest_set = event.guests.all()
+    print guest_set
+    for g in guest_set:
+        my_u = g.user
+        email = my_u.email
+        print "Sending to "+email
+        
+        send_mail(
+            'Your Answer of a reserved Event in ERSS RSVP might changed',
+            'Please go to check',
+            settings.EMAIL_HOST_USER,
+            [email],
+            fail_silently=False,
+        )
     if req.POST:
         new_question_text = req.POST.get("name","")
         
