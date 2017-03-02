@@ -454,9 +454,24 @@ def choicequestiondetails(req):
         for d in ChoiceResponse.objects.filter(user_choice=c):
             choiceresponses.append(d)
 
-    print(choiceresponses)
+    #print(choiceresponses)
     content = {"q" : q, "choiceresponses" : choiceresponses}
-    return render(req,"choicequestiondetails.html",content)    
+    return render(req,"choicequestiondetails.html",content)  
+
+@login_required
+def addchoice(req):
+    Id = req.GET.get("id","")
+    req.session["id"]=Id
+    q = ChoiceQuestion.objects.get(pk = Id)
+    choices = q.choice_set
+
+    if req.POST:
+        new_choice_text = req.POST.get("name","")
+        new_choice = Choice(question=q,choice_text = new_choice_text)
+        new_choice.save()
+        choices.add(new_choice)
+
+    return render(req,"addchoice.html",{"choices":choices,"q":q})
 """
 @login_required
 def addquestion(req):

@@ -96,13 +96,15 @@
                     <thead>
                             <th>Choice Questions</th>  
                             <th>Add Vendor</th>
+                            <th>Add a Choice</th>
                     </thead>  
 
                     <tbody>  
                         {% for t in choicequestions %}  
                         <tr>  
                             <td>  {{ t.question_text }} </td>   
-                            <td><a href="/rsvp/addchoicevendor/?id={{t.id}}">Add</a></td>
+                            <td><a href="/rsvp/addchoicevendor/?id={{t.id}}">+Vendor</a></td>
+                            <td><a href="/rsvp/addchoice/?id={{t.id}}">+Choice</a></td>
                         </tr> 
 
                         {% endfor %}  

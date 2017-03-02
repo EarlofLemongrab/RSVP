@@ -23,5 +23,6 @@ urlpatterns = [
     url(r'^edittextresponse/$',views.edittextresponse),
     url(r'^editchoiceresponse/$',views.editchoiceresponse),
     url(r'^textquestiondetails/$',views.textquestiondetails),
-    url(r'^choicequestiondetails/$',views.choicequestiondetails)
+    url(r'^choicequestiondetails/$',views.choicequestiondetails),
+    url(r'^addchoice/$',views.addchoice),
 ]
