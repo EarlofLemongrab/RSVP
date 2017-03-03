@@ -39,7 +39,7 @@ class Event(models.Model):
     vendors = models.ManyToManyField(Vendor,blank = True)
     guests = models.ManyToManyField(Guest, blank = True)
     name = models.CharField(max_length=50)
-    date = models.DateTimeField(null = True, blank = True)
+    date = models.DateField(null = True, blank = True)
     plusone = models.BooleanField(null= False, blank = False)
 
     def __unicode__(self):

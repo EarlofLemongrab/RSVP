@@ -9,9 +9,9 @@
         <div class="col-md-10 col-md-offset-1">  
 
         {% if plusone == True%}
-        <h4>+1 is allowed</h4>
+        <h4>Note:+1 is set as allowed</h4>
         {% else %}
-        <h4>+1 is not allowed</h4>
+        <h4>Note:+1 is set as not allowed</h4>
         {% endif %}
 
             <div class="col-md-4 col-md-offset"> 
@@ -119,28 +119,18 @@
 
                 <!--div class="col-md-3 col-md-offset-4">  
                     <button class="btn btn-primary btn-block" onclick= "myFunction()" > Add </button>  
-                </div-->                
-        </div>  
+                </div-->    
+                 <div class="col-md-3 col-md-offset-4">  
+                        <a href="/rsvp/add/?id={{event.id}} " class="btn btn btn-primary btn-block" style="opacity: 0.7">Edit</a></button>  
+                </div>  
 
-                <div class="col-md-3 col-md-offset-4">  
-                        <a href="/rsvp/add/?id={{event.id}} " class="btn btn btn-primary btn-block">Add Peole</a></button>  
-                </div>
+        </div>  
+<br><br><br>  <br>
+<br> <br> <br> <br> <br> <br> <br><br>
 
     </div>  
 
 </div>
-<br><br><br>
-      <form method="POST" role="form" class="form-horizontal" id="post-form">  
-        {% csrf_token %}  
-        <h1 class="form-signin-heading text-center">New Question</h1>  
-        <div class="col-md-7 col-md-offset-2">  
-            <input type="text" class="form-control" required name="question_text" id="the_post" autofocus="">  
-        </div>    
-        <div class="col-md-2">
-        <input type="submit" value="Add" class="btn btn btn-primary btn-block" id="btn">
-        </div>
-        <!-- <button class="btn btn btn-primary btn-block" onclick="myFunction()">add</button> -->
-    </form>  
  {% block javascript %}
     <script>
     $('#post-form').on('submit',function(e){

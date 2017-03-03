@@ -20,7 +20,7 @@ def index(req):
  
 def regist(req):  
     if req.session.get('username', ''):  
-         return HttpResponseRedirect('/')  
+         return HttpResponseRedirect('/rsvp/index.html')  
     status=""  
     if req.POST:  
         username = req.POST.get("username","")  
@@ -114,7 +114,11 @@ def create(req):
         name = req.POST.get("eventname","")
         date = req.POST.get("date","") 
         event = Event(name=name,date=date)
-        event.plusone = plusone
+        print event.plusone
+        if(event.plusone == True):
+            event.plusone = True
+        else:
+            event.plusone = False
         event.save()
         event.owners.add(o)
         return  HttpResponseRedirect("/rsvp/events/")
@@ -179,12 +183,13 @@ def add(req):
                 u1 = MyUser.objects.get(name=add_owner)
                 try:
                     o = Owner.objects.get(user__name=add_owner)
+                    event.owners.add(o)
                 except Owner.DoesNotExist:
                     u = MyUser.objects.get(name=add_owner)
                     o = Owner(user=u)  
                     o.save()
                     event.owners.add(o)
-            except  MyUser.DoesNotexist:
+            except  MyUser.DoesNotExist:
                 print "no user"
                 return  HttpResponseRedirect("/rsvp/add/")
         if add_vendor!="":
@@ -193,6 +198,7 @@ def add(req):
                 print "added vendor "+u2.name
                 try:
                     v = Vendor.objects.get(user__name=add_vendor)
+                    event.vendors.add(v)
                     print "has vendor "+v.user.name
                 except Vendor.DoesNotExist:
                     u = MyUser.objects.get(name=add_vendor)
@@ -206,6 +212,7 @@ def add(req):
                 u3 = MyUser.objects.get(name=add_guest)            
                 try:
                     g = Guest.objects.get(user__name=add_guest)
+                    event.guests.add(g)
                 except Guest.DoesNotExist:
                     u = MyUser.objects.get(name=add_guest)
                     g = Guest(user=u)
@@ -538,7 +545,21 @@ def choicequestionedit(req):
     Id = req.GET.get("id","")
     req.session["id"]=Id
     q = ChoiceQuestion.objects.get(pk = Id)
-    
+    event = q.event
+    guest_set = event.guests.all()
+    print guest_set
+    for g in guest_set:
+        my_u = g.user
+        email = my_u.email
+        print "Sending to "+email
+        
+        send_mail(
+            'Your Answer of a reserved Event in ERSS RSVP might changed',
+            'Please go to check',
+            settings.EMAIL_HOST_USER,
+            [email],
+            fail_silently=False,
+        )
     if req.POST:
         new_question_text = req.POST.get("name","")
         
