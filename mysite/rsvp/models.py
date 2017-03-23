@@ -4,7 +4,8 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-
+# MyUser is our class of user
+# one MyUser instance can have three identities: one Owner instance,one Guest instance,one Vendor instances
 class MyUser(models.Model):  
     user = models.OneToOneField(User)       
     name = models.CharField(max_length=50)
@@ -13,27 +14,30 @@ class MyUser(models.Model):
     def __unicode__(self):  
         return self.name
 
+# Owner class describes all properties of owner 
 class Owner(models.Model):
     user = models.OneToOneField(MyUser)
 
     def __unicode__(self):
         return self.user.name + "-Owner"
 
-
+# Vendor class reflects vendor properties
 class Vendor(models.Model):
     user = models.OneToOneField(MyUser)
 
     def __unicode__(self):
         return self.user.name + "-Vendor"
 
-
+# Guest class models guest properties
 class Guest(models.Model):
     user = models.OneToOneField(MyUser)
 
     def __unicode__(self):
         return self.user.name + "-Guest"
 
-
+# An Event instance can have many owners, vendors as well as guests. An owner can have many events. 
+# A guest can also have many events. A vendor can also have many events.
+# So I use ManyToManyField to describe their relations.
 class Event(models.Model):
     owners = models.ManyToManyField(Owner, blank = True)
     vendors = models.ManyToManyField(Vendor,blank = True)
@@ -45,6 +49,7 @@ class Event(models.Model):
     def __unicode__(self):
         return self.name
 
+#Model for multiple choice questions
 class ChoiceQuestion(models.Model):
     event = models.ForeignKey(Event,on_delete=models.CASCADE)
     question_text = models.CharField(max_length=200)
@@ -54,13 +59,14 @@ class ChoiceQuestion(models.Model):
     def __unicode__(self):
         return self.question_text
 
-
+#Model for choices; A multiple choice can have many choices while one choice normally has one question.
 class Choice(models.Model):
     question = models.ForeignKey(ChoiceQuestion, on_delete=models.CASCADE)
     choice_text = models.CharField(max_length=200)
     def __unicode__(self):
         return self.choice_text    
 
+#Model for response: Record user and their choices
 class ChoiceResponse(models.Model):
     user_choice = models.ForeignKey(Choice,on_delete=models.CASCADE)
     username = models.CharField(max_length=50,blank=True,null=True)
@@ -68,6 +74,7 @@ class ChoiceResponse(models.Model):
     def __unicode__(self):
         return self.username + "-ChoiceResponse"
 
+#Model for TextQuestion
 class TextQuestion(models.Model):
     event = models.ForeignKey(Event,on_delete=models.CASCADE)
     question_text = models.CharField(max_length=200)
@@ -77,6 +84,7 @@ class TextQuestion(models.Model):
     def __unicode__(self):
         return self.question_text
 
+#Model for TextResponses
 class TextResponse(models.Model):
     question = models.ForeignKey(TextQuestion,on_delete=models.CASCADE)
     response_text = models.CharField(max_length=200,default="Not answered yet")

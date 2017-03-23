@@ -1,0 +1,18 @@
+Danger Log
+
+1.	Our connection to server is not secured by https protocol.
+2.	We used event_id, owner_id, guest_id, vendor_id etc. in url to pass parameters. This could be resolved by using NoSQL like Mongo DB.
+3.	We do not set a minimul password length or enforcing password to contain letters or special characters.
+4.	Some exceptions are not handled quite gracefully.
+5.	User can input anything in text input. While django has system mechanism against sql injection attack, we do not sanitize user input in our program.
+
+
+
+
+
+
+
+
+
+
+

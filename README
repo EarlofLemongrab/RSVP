@@ -1,0 +1,30 @@
+Deployment Guide
+
+by Tian Liao and Dong Long
+
+1. Modify settings.py. If you want to run this app locally, add "localhost" to allowed_host. If you want to run this app on a virtual machine, be sure to add address of virtual machine to allowed_host.
+
+2. Configure database. We configured with our credentials in development. While django app is highly portable, it still requires you to fill in your database credentials in settings.py. You could create a new user (with password) and a new database name in postgres.
+
+3. Before starting server, please do "python manage.py makemigrations" and "python manage.py migrate" to ensure database is migrated.
+
+4. Start server by "python manage.py runserver".
+
+7. If you are running locally, go to "localhost:8000/rsvp/"
+
+P.S. Background is a photo taken in Hokkaido, Japan in case you like it.
+
+Ref: http://blog.csdn.net/u010442378/article/details/46580937
+     https://docs.djangoproject.com/en/1.10/intro/tutorial03/
+     https://docs.djangoproject.com/en/1.10/intro/tutorial04/
+     https://docs.djangoproject.com/en/1.10/topics/db/models/
+     https://github.com/yoanisgil/django-simple-forum
+
+
+
+
+
+
+
+
+

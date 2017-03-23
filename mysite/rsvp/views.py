@@ -12,12 +12,14 @@ from django.contrib.auth.decorators import login_required
 from datetime import datetime
 from django.conf import settings
 import json
- 
+
+#Load index page 
 def index(req):   
     username=req.session.get('username', '')  
     content = {'user': username}  
     return render_to_response('index.html', content)
- 
+
+#Handles user registration; read in username, password, repassword, email to create MyUser instance and user instance from django auth.
 def regist(req):  
     if req.session.get('username', ''):  
          return HttpResponseRedirect('/rsvp/index.html')  
@@ -39,10 +41,11 @@ def regist(req):
                 status = "success"  
                 return HttpResponseRedirect("/rsvp/login/")  
     return render(req,"regist.html",{"status":status,"user":""})  
-  
+
+#handles user login; Be aware that we use POST method to ensure data is transmitted in a secure way  
 def login(req):  
     if req.session.get('username', ''):  
-        return HttpResponseRedirect('/')  
+        return HttpResponseRedirect('/rsvp/')  
     status=""  
     if req.POST:  
         username=req.POST.get("username","")  
@@ -55,12 +58,16 @@ def login(req):
         else:  
             status="not_exist_or_passwd_err"  
     return render(req,"login.html",{"status":status}) 
-     
+
+#hanles user logout     
 @login_required
 def logout(req):  
     auth.logout(req)  
     return HttpResponseRedirect('/rsvp/')  
 
+
+# Display event list by selecting user relevant events by user's Owner, Vendor, Guest instance respectively.
+# @login_required can provide session protection
 @login_required
 def events(req):
     username = req.session.get('username','')
@@ -80,6 +87,7 @@ def events(req):
         us_sta = "yes"        
         return render(req,"events.html",{"us_sta":us_sta,"user":user})
 
+# Display what owner should see
 @login_required
 def ownerdetails(req):
     username = req.session.get('username','')  
@@ -96,7 +104,7 @@ def ownerdetails(req):
     content = {"event":event,"user":user}  
     return render(req,'ownerdetails.html',content)
 
-
+# Start a new event
 @login_required
 def create(req):
     username = req.session.get('username','')  
@@ -125,6 +133,7 @@ def create(req):
     
     return render(req,"create.html",{})
 
+# Display editable fields
 @login_required
 def edit(req):
     username = req.session.get('username','')  
@@ -150,6 +159,8 @@ def edit(req):
     content = {"event":event,"user":user,"owners":owners,"vendors":vendors,"guests":guests,"textquestions":textquestions,"choicequestions":choicequestions,"plusone" : plusone}  
     return render(req,'edit.html',content)
 
+# Edit an event: this function can handle all editing of an event at the same time 
+# by taking in multiple parameters like owner_to_be_added as well as question to be added.
 @login_required
 def add(req):
     username = req.session.get('username','')  
@@ -232,6 +243,7 @@ def add(req):
     
     return render(req,"add.html",{})
 
+# Deprecated
 @login_required
 def addq(req):
     username = req.session.get('username','')
@@ -263,6 +275,7 @@ def addq(req):
             content_type = "application/json"
         )
 
+# Display choice and text questions for guest view by quiring with guest id
 @login_required
 def guestdetails(req):
     username = req.session.get('username','')  
@@ -273,8 +286,7 @@ def guestdetails(req):
 
     Id = req.GET.get("id","") 
     req.session["id"]=Id    
-
-    #try:  
+  
     event = Event.objects.get(pk=Id) 
     textquestions = event.textquestion_set.all()
     choicequestions = event.choicequestion_set.all()
@@ -285,13 +297,11 @@ def guestdetails(req):
     for choicequestion in choicequestions:
         choiceresponse.append(choicequestion.choice_set.filter(choiceresponse__username=username))
     print(choiceresponse)
-    #except:               
-    #    return HttpResponseRedirect('/rsvp/events/')    
-    
+
     content = {"event":event,"user":user,"textquestions":textquestions,"choicequestions":choicequestions,"textresponse":textresponse,"choiceresponse":choiceresponse}  
     return render(req,'guestdetails.html',content)
 
-
+# Display questions vendor allowed to see; each vendor may see different questions
 @login_required
 def vendordetails(req):
     username = req.session.get('username','')  
@@ -313,6 +323,7 @@ def vendordetails(req):
     content = {"event":event,"choicequestions":choicequestions,"textquestions":textquestions}  
     return render(req,'vendordetails.html',content)
 
+# set text question finalized
 @login_required
 def textfinalized(req):
 
@@ -329,6 +340,7 @@ def textfinalized(req):
     print(t.finalized)
     return HttpResponseRedirect('/rsvp/events/')
 
+# set choice question finalized
 @login_required
 def choicefinalized(req):
     Id = req.GET.get("id","")
@@ -344,6 +356,7 @@ def choicefinalized(req):
     print(t.finalized)
     return HttpResponseRedirect('/rsvp/events/')  
 
+# allow a vendor to see a text question by adding vendor instance id to allowed list of a text question
 @login_required
 def addtextvendor(req):
     Id = req.GET.get("id","")
@@ -364,8 +377,8 @@ def addtextvendor(req):
         
         return  HttpResponseRedirect("/rsvp/events/")
     return  render(req,"addtextvendor.html",{})
-    #return render(req,'addtextvendor.html',content)       
-@login_required
+
+#similar to above one
 def addchoicevendor(req):
     Id = req.GET.get("id","")
     req.session["id"]=Id                     
@@ -386,6 +399,7 @@ def addchoicevendor(req):
         return  HttpResponseRedirect("/rsvp/events/")
     return  render(req,"addchoicevendor.html",{})
 
+# read user's new response to text question and update
 @login_required
 def edittextresponse(req):
 
@@ -419,6 +433,8 @@ def edittextresponse(req):
 
     return  render(req,"edittextresponse.html",{"q" : q})
 
+
+#   read user's new choice response and update database
 @login_required
 def editchoiceresponse(req):
 
@@ -457,7 +473,7 @@ def editchoiceresponse(req):
 
     return  render(req,"editchoiceresponse.html",{"q":q})
 
-
+# display responses to a specific text question
 @login_required
 def textquestiondetails(req):
     Id = req.GET.get("id","")
@@ -470,7 +486,7 @@ def textquestiondetails(req):
 
 
 
-
+# display responses to a choice question
 @login_required
 def choicequestiondetails(req):
     Id = req.GET.get("id","")
@@ -487,6 +503,8 @@ def choicequestiondetails(req):
     content = {"q" : q, "choiceresponses" : choiceresponses}
     return render(req,"choicequestiondetails.html",content)  
 
+
+# Add choice to one choice question
 @login_required
 def addchoice(req):
     Id = req.GET.get("id","")
@@ -501,6 +519,8 @@ def addchoice(req):
         choices.add(new_choice)
 
     return render(req,"addchoice.html",{"choices":choices,"q":q})
+
+# allow text question to be edited and send email
 def textquestionedit(req):
     username = req.session.get('username','')
     if username != '':
@@ -535,6 +555,7 @@ def textquestionedit(req):
         return  render(req,"textquestionedit.html",{"q" : q})
     return  render(req,"textquestionedit.html",{"q" : q})
 
+# allow choice question to be changed and send email 
 def choicequestionedit(req):
     username = req.session.get('username','')
     if username != '':
@@ -567,115 +588,3 @@ def choicequestionedit(req):
         q.save()
         return  render(req,"choicequestionedit.html",{"q" : q})
     return  render(req,"choicequestionedit.html",{"q" : q})
-
-
-
-
-"""
-@login_required
-def addquestion(req):
-    username = req.session.get('username','')  
-    if username != '':  
-        user = MyUser.objects.get(user__username=username)  
-    else:  
-        user = ''                     
-    
-    Id = req.GET.get("id","") 
-    req.session["id"]=Id
-
-    event = Event.objects.get(pk=Id)   
-
-def get_acad_list():  
-    room_list = ConfeRoom.objects.all() 
-    acad_list = set()  
-    for room in room_list:  
-        acad_list.add(room.acad)  
-    return list(acad_list)  
-
-def viewroom(req):  
-    username = req.session.get('username', '')  
-    if username != '':  
-        user = MyUser.objects.get(user__username=username)  
-    else:  
-        user = ''  
-    acad_list=get_acad_list()   
-    room_acad = req.GET.get("acad","all")                                           
-    if room_acad not in acad_list:          
-        room_acad = "all"  
-        room_list=ConfeRoom.objects.all()  
-    else:  
-        room_list=ConfeRoom.objects.filter(acad=room_acad)  
-    content = {"acad_list":acad_list,"room_acad":room_acad,"room_list":room_list,"user":user}  
-    return render(req,'viewroom.html',content)  
- 
-def detail(req):  
-    username = req.session.get('username','')  
-    if username != '':  
-        user = MyUser.objects.get(user__username=username)  
-    else:  
-        user = ''  
-    Id = req.GET.get("id","") 
-    req.session["id"]=Id  
-    if Id == "":  
-        return HttpResponseRedirect('/viewroom/')  
-    try:  
-        room = ConfeRoom.objects.get(pk=Id) 
-        ro =Detail.objects.get(pk=Id)  
-    except:               
-        return HttpResponseRedirect('/viewroom/')  
-    img_list = Detail.objects.filter(room=room)  
-    num_list = get_order_list()  
-    if room.num not in num_list:    
-        or_sta="yes"  
-    else:  
-        or_sta="no"  
-    content = {"room":room,"img_list":img_list,"ro":ro,"or_sta":or_sta,"user":user}  
-    return render(req,'detail.html',content)  
-
- 
-def get_order_list():  
-    num_list=set()  
-    order_list=Order.objects.all()  
-    for order in order_list:  
-        num_list.add(order.num)  
-    return list(num_list)  
-def order(req):  
-    username = req.session.get('username','')  
-    if username != '':  
-        user = MyUser.objects.get(user__username=username)  
-    else:  
-        user = ''  
-    roid = req.session.get("id","")                   
-    room = ConfeRoom.objects.get(pk=roid)  
-    time = Detail.objects.get(name=room.name)  
-    u = MyUser.objects.get(user__username=username)  
-    order = Order(user=username,num=room.num,name=room.name,time=time.time,size=room.size,phone=u.phone)  
-    order.save()  
-    return render(req,"index2.html",{"user":user})  
-    
-def myorder(req):  
-    username = req.session.get('username','')  
-    if username != '':  
-        user = MyUser.objects.get(user__username=username)  
-    else:  
-        user = ''  
-    try:  
-        my_order=Order.objects.all()        
-        us_sta = "no"  
-        return render(req,"myorder.html",{"myorder":my_order,"us_sta":us_sta,"user":user})  
-                  
-    except:  
-        us_sta = "yes"        
-        return render(req,"myorder.html",{"us_sta":us_sta,"user":user})  
-       
-def cancel(req):  
-    username = req.session.get('username','')  
-    if username != '':  
-        user = MyUser.objects.get(user__username=username)  
-    else:  
-        user = ''  
-    Id = req.GET.get("id","")      
-    room =Order.objects.get(pk=Id)  
-    room.delete()  
-    return render(req,"index.html") 
-"""

@@ -25,7 +25,7 @@ SECRET_KEY = 'x42iz=&se0!j)ha(==y52fqknwjkk07na0b%@tqf$^pipg7dee'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['colab-sbx-pvt-11.oit.duke.edu','localhost']
+ALLOWED_HOSTS = ['colab-sbx-pvt-11.oit.duke.edu','localhost','127.0.0.1']
 
 
 # Application definition
@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'rsvp',
 ]
 
-MIDDLEWARE_CLASSES = [
+MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -80,7 +80,6 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
