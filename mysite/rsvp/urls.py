@@ -27,4 +27,6 @@ urlpatterns = [
     url(r'^addchoice/$',views.addchoice),
     url(r'^textquestionedit/$',views.textquestionedit),
     url(r'^choicequestionedit/$',views.choicequestionedit),
+    url(r'^sendmessage/$',views.sendmessage),
+    url(r'^inbox/$',views.inbox),
 ]

@@ -588,3 +588,35 @@ def choicequestionedit(req):
         q.save()
         return  render(req,"choicequestionedit.html",{"q" : q})
     return  render(req,"choicequestionedit.html",{"q" : q})
+
+
+
+def sendmessage(req):
+    username = req.session.get('username','')  
+    if username != '':  
+        user = MyUser.objects.get(user__username=username)  
+    else:  
+        user = ''  
+    if req.POST:
+        receiver = req.POST.get("receiver","")
+        u = MyUser.objects.get(name = receiver)
+        subtitle = req.POST.get("subtitle","")
+        content = req.POST.get("content","")
+        m = Msg(sender = user,receiver=u,subtitle=subtitle,content=content)
+        m.save()
+        
+        return  HttpResponseRedirect("/rsvp/events/")
+    return  render(req,"sendmessage.html",{})
+
+
+def inbox(req):
+    username = req.session.get('username','')  
+    if username != '':  
+        user = MyUser.objects.get(user__username=username)  
+    else:  
+        user = ''    
+    msgs = Msg.objects.filter(receiver=user)
+    
+        
+
+    return render(req,"inbox.html",{"msgs":msgs})

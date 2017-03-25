@@ -93,6 +93,14 @@ class TextResponse(models.Model):
     def __unicode__(self):
         return self.response_text
 
-    
+#Model for Message
+class Msg(models.Model):
+    sender = models.ForeignKey(MyUser,related_name='sender',on_delete=models.CASCADE)
+    receiver = models.ForeignKey(MyUser,related_name='receiver',on_delete=models.CASCADE)
+    subtitle = models.CharField(max_length=200,default="")
+    content = models.CharField(max_length=200,default="")
+
+    def __unicode__(self):
+        return self.subtitle 
         
 
