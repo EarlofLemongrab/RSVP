@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rsvp',
+    'easy_maps',
 ]
 
 MIDDLEWARE = [
@@ -120,7 +121,8 @@ EMAIL_HOST_PASSWORD = 'l0ngd0ng' #my gmail password
 EMAIL_HOST_USER = 'donglong.1993.01.02@gmail.com' #my gmail username
 EMAIL_PORT = 587
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-
+EASY_MAPS_GOOGLE_MAPS_API_KEY = 'AIzaSyDg4sXoOi9ZLmTj9lpSWKg56ly9qS5xtvs'
+EASY_MAPS_CENTER = (-41.3, 32)
 
 
 # Static files (CSS, JavaScript, Images)

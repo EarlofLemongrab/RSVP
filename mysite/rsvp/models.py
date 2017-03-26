@@ -44,6 +44,7 @@ class Event(models.Model):
     guests = models.ManyToManyField(Guest, blank = True)
     name = models.CharField(max_length=50)
     date = models.DateField(null = True, blank = True)
+    location = models.CharField(max_length=200,default='')
     plusone = models.BooleanField(null= False, blank = False)
 
     def __unicode__(self):

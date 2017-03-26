@@ -1,0 +1,42 @@
+{% extends "base.html" %}  
+{% load staticfiles %}  
+{% block title %}Event List{% endblock %}  
+  
+{% block content %}  
+{% load easy_maps_tags %}  
+<style type="text/css">
+.dialog{
+    position: fixed;
+    _position:absolute;
+    z-index:1;
+    top: 50%;
+    left: 50%;
+    margin: -141px 0 0 -201px;
+    width: 400px;
+    height:450px;
+    border:1px solid #CCC;
+    line-height: 280px;
+    text-align:center;
+    font-size: 14px;
+    background-color:#F4F4F4;
+    overflow:hidden;
+}   
+</style>
+<div class="container">  
+    <div class="row">  
+        <div class="col-md-10 col-md-offset-1">  
+            <div class="col-md-9 col-md-offset-1">  
+             <div class="dialog">{% easy_map location 400 450 %}</div>
+                  
+            </div>  
+        </div>  
+    </div>  
+</div>  
+  <br><br><br>  <br>
+<br> <br> <br> <br> <br> <br> <br><br>
+
+<br><br><br>  <br>
+<br> <br> <br> <br> <br> <br> <br><br>
+    
+  
+{% endblock %}  

@@ -146,8 +146,9 @@ def create(req):
             o = Owner(user=user)
             o.save()
         name = req.POST.get("eventname","")
-        date = req.POST.get("date","") 
-        event = Event(name=name,date=date)
+        date = req.POST.get("date","")
+        location = req.POST.get("location","") 
+        event = Event(name=name,date=date,location=location)
         print event.plusone
         if(event.plusone == True):
             event.plusone = True
@@ -322,9 +323,9 @@ def guestdetails(req):
         textresponse.append(textquestion.textresponse_set.filter(username=username))
     for choicequestion in choicequestions:
         choiceresponse.append(choicequestion.choice_set.filter(choiceresponse__username=username))
-    print(choiceresponse)
+    print ("event loc"+event.location)
 
-    content = {"event":event,"user":user,"textquestions":textquestions,"choicequestions":choicequestions,"textresponse":textresponse,"choiceresponse":choiceresponse}  
+    content = {"event":event,"user":user,"textquestions":textquestions,"choicequestions":choicequestions,"textresponse":textresponse,"choiceresponse":choiceresponse,"location":event.location}  
     return render(req,'guestdetails.html',content)
 
 # Display questions vendor allowed to see; each vendor may see different questions
@@ -744,3 +745,21 @@ def yelp(req,term,loc):
 
     return render(req,"yelp.html",{"businesses":businesses})
 
+
+@login_required
+def direction(req):
+    username = req.session.get('username','')  
+    if username != '':  
+        user = MyUser.objects.get(user__username=username)  
+    else:  
+        user = ''  
+
+    Id = req.GET.get("id","") 
+    req.session["id"]=Id    
+  
+    event = Event.objects.get(pk=Id) 
+
+    print ("event loc"+event.location)
+
+    content = {"location":event.location}  
+    return render(req,'direction.html',content)
